@@ -71,14 +71,14 @@ def show_pokemon(request, pokemon_id):
         'title_jp': requested_pokemon.title_jp,
         'description': requested_pokemon.description,
     }
-    for pokemon_entity in requested_pokemon.entity.all():
+    for pokemon_entity in requested_pokemon.entities.all():
         add_pokemon(
             folium_map, pokemon_entity.lat,
             pokemon_entity.lon,
             pokemon_image_url
         )
     previous_pokemon(request, pokemon_specs, requested_pokemon)
-    next_pokemon(request, pokemon_specs, requested_pokemon)
+    next_pokemons(request, pokemon_specs, requested_pokemon)
 
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(), 'pokemon': pokemon_specs
@@ -97,8 +97,8 @@ def previous_pokemon(request, pokemon_specs, pokemon_daddy):
         }
 
 
-def next_pokemon(request, pokemon_specs, pokemon_son):
-    pokemon = pokemon_son.next_pokemon.first()
+def next_pokemons(request, pokemon_specs, pokemon_son):
+    pokemon = pokemon_son.next_pokemons.first()
     if pokemon:
         pokemon_image_url = request.build_absolute_uri(
             pokemon.image.url) if pokemon.image else DEFAULT_IMAGE_URL

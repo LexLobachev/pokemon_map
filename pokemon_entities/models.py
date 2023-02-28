@@ -8,14 +8,14 @@ class Pokemon(models.Model):
     image = models.ImageField(upload_to='photos', null=True, blank=True, verbose_name="изображение")
     description = models.TextField(blank=True, verbose_name="описание")
     previous_evolution = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL,
-                                           verbose_name='Из кого эволюционировал', related_name='next_pokemon')
+                                           verbose_name='Из кого эволюционировал', related_name='next_pokemons')
 
     def __str__(self):
         return self.title
 
 
 class PokemonEntity(models.Model):
-    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, related_name='entity', verbose_name="покемон")
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, related_name='entities', verbose_name="покемон")
     lat = models.FloatField(blank=True, verbose_name="широта")
     lon = models.FloatField(blank=True, verbose_name="долгота")
     appeared_at = models.DateTimeField(null=True, blank=True, verbose_name="время появления")
