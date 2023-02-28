@@ -72,33 +72,25 @@ def show_pokemon(request, pokemon_id):
             pokemon_entity.lon,
             pokemon_image_url
         )
-    previous_pokemon(request, pokemon_serialized, requested_pokemon)
-    next_pokemons(request, pokemon_serialized, requested_pokemon)
+    previous_pokemon = requested_pokemon.previous_evolution
+    if previous_pokemon:
+        pokemon_image_url = request.build_absolute_uri(
+            previous_pokemon.image.url) if previous_pokemon.image else DEFAULT_IMAGE_URL
+        pokemon_serialized['previous_evolution'] = {
+            'pokemon_id': previous_pokemon.id,
+            'title_ru': previous_pokemon.title,
+            'img_url': pokemon_image_url,
+        }
+    next_pokemon = requested_pokemon.next_pokemons.first()
+    if next_pokemon:
+        pokemon_image_url = request.build_absolute_uri(
+            next_pokemon.image.url) if next_pokemon.image else DEFAULT_IMAGE_URL
+        pokemon_serialized['next_evolution'] = {
+            'pokemon_id': next_pokemon.id,
+            'img_url': pokemon_image_url,
+            'title_ru': next_pokemon.title,
+        }
 
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(), 'pokemon': pokemon_serialized
     })
-
-
-def previous_pokemon(request, pokemon_specs, pokemon_daddy):
-    pokemon = pokemon_daddy.previous_evolution
-    if pokemon:
-        pokemon_image_url = request.build_absolute_uri(
-            pokemon.image.url) if pokemon.image else DEFAULT_IMAGE_URL
-        pokemon_specs['previous_evolution'] = {
-            'pokemon_id': pokemon.id,
-            'title_ru': pokemon.title,
-            'img_url': pokemon_image_url,
-        }
-
-
-def next_pokemons(request, pokemon_specs, pokemon_son):
-    pokemon = pokemon_son.next_pokemons.first()
-    if pokemon:
-        pokemon_image_url = request.build_absolute_uri(
-            pokemon.image.url) if pokemon.image else DEFAULT_IMAGE_URL
-        pokemon_specs['next_evolution'] = {
-            'pokemon_id': pokemon.id,
-            'img_url': pokemon_image_url,
-            'title_ru': pokemon.title,
-        }
