@@ -98,7 +98,7 @@ def previous_pokemon(request, pokemon_specs, pokemon_daddy):
 
 
 def next_pokemon(request, pokemon_specs, pokemon_son):
-    pokemon = pokemon_son.previous_pokemon.first()
+    pokemon = pokemon_son.next_pokemon.first()
     if pokemon:
         pokemon_image_url = request.build_absolute_uri(
             pokemon.image.url) if pokemon.image else DEFAULT_IMAGE_URL
