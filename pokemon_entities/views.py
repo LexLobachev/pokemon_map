@@ -58,7 +58,7 @@ def show_pokemon(request, pokemon_id):
     pokemon_image_url = request.build_absolute_uri(
         requested_pokemon.image.url) if requested_pokemon.image else DEFAULT_IMAGE_URL
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    pokemon_specs = {
+    pokemon_serialized = {
         'pokemon_id': requested_pokemon.id,
         'img_url': pokemon_image_url,
         'title_ru': requested_pokemon.title,
@@ -72,11 +72,11 @@ def show_pokemon(request, pokemon_id):
             pokemon_entity.lon,
             pokemon_image_url
         )
-    previous_pokemon(request, pokemon_specs, requested_pokemon)
-    next_pokemons(request, pokemon_specs, requested_pokemon)
+    previous_pokemon(request, pokemon_serialized, requested_pokemon)
+    next_pokemons(request, pokemon_serialized, requested_pokemon)
 
     return render(request, 'pokemon.html', context={
-        'map': folium_map._repr_html_(), 'pokemon': pokemon_specs
+        'map': folium_map._repr_html_(), 'pokemon': pokemon_serialized
     })
 
 
